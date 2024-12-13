@@ -5,7 +5,6 @@ import json
 import time
 import pandas as pd
 import fast_bitrix24
-from typing import List
 
 URLBITRIX = os.environ['URLBITRIX']
 URLSERVICE = os.environ['URLSERVICE']
@@ -19,11 +18,6 @@ region = b.get_all('lists.element.get',listsdata)
 def getlistregions():
     global regdict
     print('get ID from list')
-    listsdata = {
-                'IBLOCK_ID':LISTID,
-                'IBLOCK_TYPE_ID':'lists'
-            }
-
     numregdf = pd.DataFrame(region)
     for index,row in numregdf.iterrows():
         if pd.notna(row[REGUF]):
