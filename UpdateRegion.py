@@ -4,7 +4,7 @@ import requests
 import json
 import time
 import pandas as pd
-
+import fast_bitrix24
 URLBITRIX = os.environ['URLBITRIX']
 URLSERVICE = os.environ['URLSERVICE']
 LISTID = os.environ['LISTID']
@@ -14,17 +14,14 @@ REGUF = os.environ['REGUF']
 regdict = dict()
 
 def getlistregions():
-    global regdict   
+    global regdict
+    b =fast_bitrix24.Bitrix(URLBITRIX)   
     print('get ID from list')
     listsdata = {
                 'IBLOCK_ID':LISTID,
                 'IBLOCK_TYPE_ID':'lists'
             }
-    regionlist = requests.post(str(f'{URLBITRIX}/lists.element.get'),  json=listsdata)
-    regionlist.close
-    regionlist2 = json.loads(regionlist.text)
-
-    numregdf = pd.DataFrame(regionlist2['result'])
+    numregdf = pd.DataFrame(b.get_all('lists.element.get',listsdata))
     for index,row in numregdf.iterrows():
         if pd.notna(row[REGUF]):
             try:
@@ -35,8 +32,8 @@ def getlistregions():
                     regdict.update({str(*row[REGUF].values()) : row['ID']})
             except:
                 print(f'Не получилось подставить {row[REGUF]}')#, end="\r"
-    del regionlist,regionlist2,numregdf
-    print('done')
+    del numregdf
+    print('done count of list', len(regdict))
 
 getlistregions()
 
