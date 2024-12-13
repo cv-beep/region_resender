@@ -22,6 +22,7 @@ def getlistregions():
                 'IBLOCK_TYPE_ID':'lists'
             }
     region = b.get_all('lists.element.get',listsdata)
+    print(region)
     numregdf = pd.DataFrame(region)
     for index,row in numregdf.iterrows():
         if pd.notna(row[REGUF]):
