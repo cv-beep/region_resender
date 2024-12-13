@@ -12,7 +12,7 @@ URLSERVICE = os.environ['URLSERVICE']
 LISTID = os.environ['LISTID']
 ENVAUTH = os.environ['ENVAUTH']
 REGUF = os.environ['REGUF']
-
+listsdata = {'IBLOCK_ID':LISTID,'IBLOCK_TYPE_ID':'lists'}
 regdict = dict()
 b =fast_bitrix24.Bitrix(URLBITRIX)
 region = b.get_all('lists.element.get',listsdata)
