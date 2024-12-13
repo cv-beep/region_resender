@@ -12,17 +12,16 @@ ENVAUTH = os.environ['ENVAUTH']
 REGUF = os.environ['REGUF']
 
 regdict = dict()
-
+b =fast_bitrix24.Bitrix(URLBITRIX)
+region = b.get_all('lists.element.get',listsdata)
 def getlistregions():
     global regdict
-    b =fast_bitrix24.Bitrix(URLBITRIX)   
     print('get ID from list')
     listsdata = {
                 'IBLOCK_ID':LISTID,
                 'IBLOCK_TYPE_ID':'lists'
             }
-    region = b.get_all('lists.element.get',listsdata)
-    print(region)
+
     numregdf = pd.DataFrame(region)
     for index,row in numregdf.iterrows():
         if pd.notna(row[REGUF]):
