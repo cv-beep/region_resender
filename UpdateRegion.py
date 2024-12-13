@@ -11,14 +11,19 @@ URLSERVICE = os.environ['URLSERVICE']
 LISTID = os.environ['LISTID']
 ENVAUTH = os.environ['ENVAUTH']
 REGUF = os.environ['REGUF']
-listsdata = {'IBLOCK_ID':LISTID,'IBLOCK_TYPE_ID':'lists'}
+
 regdict = dict()
-b =fast_bitrix24.Bitrix(URLBITRIX)
-region = b.get_all('lists.element.get',listsdata)
+
 def getlistregions():
     global regdict
+    b =fast_bitrix24.Bitrix(URLBITRIX)   
     print('get ID from list')
-    numregdf = pd.DataFrame(region)
+    listsdata = {
+                'IBLOCK_ID':LISTID,
+                'IBLOCK_TYPE_ID':'lists'
+            }
+    
+    numregdf = pd.DataFrame(b.get_all('lists.element.get',listsdata))
     for index,row in numregdf.iterrows():
         if pd.notna(row[REGUF]):
             try:
@@ -29,7 +34,7 @@ def getlistregions():
                     regdict.update({str(*row[REGUF].values()) : row['ID']})
             except:
                 print(f'Не получилось подставить {row[REGUF]}')#, end="\r"
-    del numregdf,region
+    del numregdf
     print('done count of list', len(regdict))
 
 getlistregions()
