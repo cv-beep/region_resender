@@ -5,6 +5,8 @@ import json
 import time
 import pandas as pd
 import fast_bitrix24
+from typing import List
+
 URLBITRIX = os.environ['URLBITRIX']
 URLSERVICE = os.environ['URLSERVICE']
 LISTID = os.environ['LISTID']
