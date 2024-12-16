@@ -4,9 +4,7 @@ import requests
 import json
 import time
 import pandas as pd
-import fast_bitrix24
-from fast_bitrix24 import BitrixAsync
-import asyncio
+
 
 URLBITRIX = os.environ['URLBITRIX']
 URLSERVICE = os.environ['URLSERVICE']
