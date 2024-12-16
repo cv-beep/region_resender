@@ -17,19 +17,32 @@ REGUF = os.environ['REGUF']
 regdict = dict()
 
 def getlistregions():
-    global regdict
-    b =BitrixAsync(URLBITRIX)   
+      
     print('get ID from list')
     listsdata = {
                 'IBLOCK_ID':LISTID,
                 'IBLOCK_TYPE_ID':'lists'
             }
-    region = await b.get_all('lists.element.get',listsdata)
-    numregdf = pd.DataFrame(region)
+    listsdata.update({'ELEMENT_ORDER': { "ID": "DESC" }})
+    regionlist0 = requests.post(str(f'{URLBITRIX}/lists.element.get'),  json=listsdata)
+    regionlist0.close
+    tmpreg = json.loads(regionlist0.text)
+    update_regdict(tmpreg)
+    del regionlist0
+    listsdata.update({'ELEMENT_ORDER': { "ID": "ASC" }})
+    regionlist1 = requests.post(str(f'{URLBITRIX}/lists.element.get'),  json=listsdata)
+    regionlist1.close
+    update_regdict(json.loads(regionlist1.text))
+    del regionlist1
+
+
+def update_regdict(regionlist):
+    global regdict
+    numregdf = pd.DataFrame(regionlist['result'])
     for index,row in numregdf.iterrows():
         if pd.notna(row[REGUF]):
             try:
-                if len(row[REGUF]) != 1:               
+                if len(row[REGUF]) != 1:
                     for i in row[REGUF].values():
                         regdict.update({i : row['ID']})
                 else:
@@ -37,6 +50,7 @@ def getlistregions():
             except:
                 print(f'Не получилось подставить {row[REGUF]}')#, end="\r"
     del numregdf
+    
     print('done count of list', len(regdict))
 
 getlistregions()
